@@ -1,4 +1,4 @@
-// Knuth-Morris-Pratt(KMP) String Matching Algorithm
+// Knuth Morris Pratt(KMP) String Matching Algorithm
 #include<stdio.h>
 #include<string.h>
 
@@ -30,13 +30,50 @@ int main(){
 }
 
 int match(char* str, char* pat){
-	int n, m;
-	n = strlen(str);
-	m = strlen(pat);
-	int i, j;
-	// Generate Pi table
+	int n = strlen(str);
+	int m = strlen(pat);
+	
+	// generate pi table
+	int pi[m + 1];
+	int i, q = 0;
+	pi[1] = 0;
+	for(i = 2; i <= m; i++){
+		while(i <= m && pat[0 + q] == pat[i - 1]){
+			q++;		
+			pi[i] = q;
+			i++;
+		}
+		q = 0;
+		pi[i] = q;
+	}
+	
+	// print pi table
+	printf("PI Table:\n");
+	for(i = 1; i <= m; i++){
+		printf("%3d ", i);
+	}
+	printf("\n");
+	for(i = 1; i <= m; i++){
+		printf("%3c ", pat[i - 1]);
+	}
+	printf("\n");
+	for(i = 1; i <= m; i++){
+		printf("%3d ", pi[i]);
+	}
+	printf("\n");
+	
+	// searching for match
+	q = 0;
 	for(i = 0; i < n; i++){
-		// 
+		while(q > 0 && str[i] != pat[q]){
+			q = pi[q];
+		}
+		if(str[i] == pat[q]){
+			q++;
+		}
+		if(q == m){
+			return (i - m + 1);
+		}
 	}
 	
 	return -1;
